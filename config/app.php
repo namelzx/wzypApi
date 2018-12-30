@@ -142,5 +142,12 @@ return [
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
+    'aliyun_oss' => [
+        'KeyId' => 'LTAI4G7m7lF5SkXU',  //您的Access Key ID
+        'KeySecret' => 'PbcsuZTY2CMVPjr1K2DGzMejeotVTI',  //您的Access Key Secret
+        'Endpoint' => 'oss-cn-beijing.aliyuncs.com',  //阿里云oss EndPoint 节点
+        'Bucket' => 'wzyp',  //Bucket名称
+        'url' => 'https://wzyp.oss-cn-beijing.aliyuncs.com/'
+    ],
 
 ];
