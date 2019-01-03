@@ -29,17 +29,27 @@ class Goods extends Model
         return $this->hasMany('GoodsBanner', 'goods_id', 'id');
     }
 
-    public static function GetByList($data)
+    /**
+     * 获取整个数据列表
+     */
+    public function bis()
+    {
+        return $this->hasOne('BisGoods', 'goods_id', 'id');
+    }
+
+    public static function GetByList($data, $shop = null)
     {
         $res = self::with('banneritems');
 
         if (!empty($data['type_id'])) {
             $res = $res->where('type_id', $data['type_id']);
         }
+        if (!empty($shop)) {
+            $res = $res->with(['banneritems','bis'])->whereIn('id', $shop);
+        }
         $res = $res->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
     }
-
     /**
      *获取详细信息
      */

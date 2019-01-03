@@ -19,6 +19,7 @@ Route::group('api/admin/', function () {
     //公用类获取产品类型
     Route::get('/goodstype', 'api/common/getGoodsTypeByList');
     Route::post('/images', 'api/common/upload');
+
     // 登录类
     Route::post('/login', 'api/Login/login');
     Route::get('/info', 'api/Login/info');
@@ -61,6 +62,9 @@ Route::group('api/index/', function () {
     Route::get('/goodstype', 'api/common/getGoodsTypeByList');//获取所有分类
     Route::get('/GetUserByOenid', 'index/goods/GetUserByOenid'); /* 获取列表*/
     Route::post('/CheckUser', 'index/goods/CheckUser');//检测是否存在
+    Route::post('/images', 'api/common/indexupload');
+    Route::post('/tempupload', 'api/common/tempupload');
+
 
     /**
      * 产品模块
@@ -95,6 +99,11 @@ Route::group('api/index/', function () {
     Route::post('/order/PostDataByUpdate', 'index/order/PostDataByUpdate'); /*  修改信息*/
     Route::get('/order/GetDataBydetailed', 'index/order/GetDataBydetailed'); /*  删除数据*/
 
+
+    /**
+     * 商家模块
+     */
+    Route::get('/shop/GetShopList', 'index/shop/GetShopList'); /* 获取列表*/
 });
 return [
 
