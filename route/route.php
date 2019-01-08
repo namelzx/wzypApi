@@ -104,6 +104,20 @@ Route::group('api/index/', function () {
      * 商家模块
      */
     Route::get('/shop/GetShopList', 'index/shop/GetShopList'); /* 获取列表*/
+//    Route::post('/shop/PostDataByData', 'index/shop/PostDataByData'); /* 添加商品*/
+//    Route::post('/shop/GetShopByGoods', 'index/shop/GetShopByGoods'); /* 获取商家自己提交的商品*/
+
+
+    /**
+     * 供货商模块
+     */
+    Route::post('/supply/PostDataByData', 'index/supply/PostDataByData'); /* 添加商品*/
+    Route::get('/supply/GetShopByGoods', 'index/supply/GetShopByGoods'); /* 获取商家自己提交的商品*/
+    Route::post('/supply/GetShopGoodsByStatus', 'index/supply/GetShopGoodsByStatus'); /* 修改商品状态*/
+    Route::get('/supply/GetShopGoodsByDelete', 'index/supply/GetShopGoodsByDelete'); /* 删除商品*/
+    Route::get('/supply/GetDataByFind', 'index/supply/GetDataByFind'); /* 获取商品详情*/
+
+
 });
 return [
 

@@ -45,17 +45,60 @@ class Goods extends Model
             $res = $res->where('type_id', $data['type_id']);
         }
         if (!empty($shop)) {
-            $res = $res->with(['banneritems','bis'])->whereIn('id', $shop);
+            $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
         }
-        $res = $res->paginate($data['limit'], false, ['query' => $data['page']]);
+        $res = $res->where('status',1)->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
     }
+
     /**
      *获取详细信息
      */
     public static function GetDataBydetailed($id)
     {
         $res = self::with('bannerList')->where($id)->find();
+        return $res;
+    }
+
+    /**
+     *获取商家自己的商品
+     */
+    public static function GetShopByGoods($data)
+    {
+        $res = self::with('banneritems')->where('bis_id', $data['bis_id']);
+
+        if (!empty($data['type_id'])) {
+            $res = $res->where('type_id', $data['type_id']);
+        }
+        if (!empty($data['status'])) {
+            if ($data['status'] != 3) {
+                $res = $res->where('status', $data['status']);
+            }
+        }
+        if(empty($data['status'])){
+            $res = $res->where('status',0);
+        }
+        if (!empty($shop)) {
+            $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
+        }
+        $res = $res->paginate($data['limit'], false, ['query' => $data['page']]);
+        return $res;
+    }
+
+    /**
+     * 删除商品
+     */
+    public static function GetShopGoodsByDelete($data)
+    {
+        $res = self::where($data)->delete();
+        return $res;
+    }
+    /**
+     * 修改商品状态
+     */
+    public static function GetShopGoodsByStatus($data)
+    {
+        $res = self::where('id',$data['id'])->data($data)->update();
         return $res;
     }
 
