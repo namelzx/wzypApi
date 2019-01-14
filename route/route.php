@@ -60,10 +60,18 @@ Route::group('api/admin/', function () {
 Route::group('api/index/', function () {
     //公用类获取产品类型
     Route::get('/goodstype', 'api/common/getGoodsTypeByList');//获取所有分类
+    Route::get('notice', 'index/index/index');//获取所有分类
     Route::get('/GetUserByOenid', 'index/goods/GetUserByOenid'); /* 获取列表*/
     Route::post('/CheckUser', 'index/goods/CheckUser');//检测是否存在
     Route::post('/images', 'api/common/indexupload');
     Route::post('/tempupload', 'api/common/tempupload');
+
+    Route::get('/GetToken', 'index//Wechat/GetToken');//获取token
+    Route::post('/GetCode', 'index//Wechat/GetCode');//获取二维码
+    Route::get('/getShopByInfo', 'index//user/getShopByInfo');//获取商铺信息
+    Route::post('/postShopByInfo', 'index//user/postShopByInfo');//获取二维码
+
+
 
 
     /**
@@ -97,7 +105,8 @@ Route::group('api/index/', function () {
     Route::get('/order/GetDataByDelete', 'index/order/GetDataByDelete'); /*  删除数据*/
     Route::post('/order/PostDataByAdd', 'index/order/PostDataByData'); /* 提交订单*/
     Route::post('/order/PostDataByUpdate', 'index/order/PostDataByUpdate'); /*  修改信息*/
-    Route::get('/order/GetDataBydetailed', 'index/order/GetDataBydetailed'); /*  删除数据*/
+    Route::get('/order/GetDataBydetailed', 'index/order/GetDataBydetailed'); /*  获取订单详情*/
+
 
 
     /**
@@ -116,8 +125,7 @@ Route::group('api/index/', function () {
     Route::post('/supply/GetShopGoodsByStatus', 'index/supply/GetShopGoodsByStatus'); /* 修改商品状态*/
     Route::get('/supply/GetShopGoodsByDelete', 'index/supply/GetShopGoodsByDelete'); /* 删除商品*/
     Route::get('/supply/GetDataByFind', 'index/supply/GetDataByFind'); /* 获取商品详情*/
-
-
+    Route::post('/supply/queryOrder', 'index/supply/queryOrder'); /* 查询订单*/
 });
 return [
 

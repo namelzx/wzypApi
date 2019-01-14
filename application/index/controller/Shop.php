@@ -24,7 +24,7 @@ class Shop extends Base
         foreach ($all as $v => $item) {
             $whereorder[$v] = $all[$v]['goods_id'];
         }
-        $res = \app\common\model\Goods::GetByList($data, $whereorder);
+        $res = \app\common\model\Goods::GetShopByList($data, $whereorder);
         return json(msg(200, $res, '获取成功'));
     }
 

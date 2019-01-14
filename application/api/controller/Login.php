@@ -18,10 +18,10 @@ class Login extends Base
         if ($this->request->isPost()) {
             $userModel = new Admin();
             $hasUser = $userModel->where('username', $data['username'])->find();
+
             if (empty($hasUser)) {
                 return json(logomsg(500, '', '', '管理员不存在'));
             }
-
             if ($data['password'] != $hasUser['password']) {
                 return json(logomsg(500, '', '', '密码错误'));
             }

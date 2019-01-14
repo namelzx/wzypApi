@@ -7,6 +7,7 @@
  */
 
 namespace app\index\controller;
+use app\common\model\MainOrder;
 
 
 /**
@@ -22,8 +23,8 @@ class Supply extends Base
         $data = input('param.');
 
         if (!empty($data['id'])) {
-            $res = \app\api\model\Goods::where('id',$data['id'])->data($data)->update();
-            \app\api\model\GoodsBanner::where('goods_id',$data['id'])->delete();
+            $res = \app\api\model\Goods::where('id', $data['id'])->data($data)->update();
+            \app\api\model\GoodsBanner::where('goods_id', $data['id'])->delete();
             $bannner = [];
             for ($i = 0; $i < count($data['images']); $i++) {
                 $bannner[$i]['url'] = $data['images'][$i];
@@ -86,5 +87,14 @@ class Supply extends Base
         return json(msg(200, $res, '修改成功'));
     }
 
+    /**
+     * 查询订单
+     */
+    public function queryOrder()
+    {
+        $data = input('param.');
+        $res=MainOrder::GetDataBytrade_no($data['out_trade_no']);
+        return json(msg(200, $res, '返回订单数据'));
+    }
 
 }

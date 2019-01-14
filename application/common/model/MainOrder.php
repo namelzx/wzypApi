@@ -18,13 +18,19 @@ class MainOrder extends BaseModel
     {
         return $this->hasOne('GoodsBanner', 'goods_id', 'id');
     }
-
+    /**
+     * 获取用户信息
+     */
+    public function userinfo()
+    {
+        return $this->hasOne('User', 'id', 'user_id');
+    }
     /**
      * 获取订单从表
      */
     public function fromorder()
     {
-        return $this->hasMany('FromOrder', 'order_id', 'id');
+        return $this->hasOne('FromOrder', 'order_id', 'id');
 
     }
 
@@ -44,7 +50,7 @@ class MainOrder extends BaseModel
         if (!empty($data['user_id'])) {
             $res = $res->where('user_id', $data['user_id']);
         }
-        if(!empty($data['status'])){
+        if (!empty($data['status'])) {
             $res = $res->where('status', $data['status']);
         }
         $res = $res->paginate($data['limit'], false, ['query' => $data['page']]);
@@ -56,7 +62,15 @@ class MainOrder extends BaseModel
      */
     public static function GetDataBydetailed($id)
     {
-        $res = self::with('bannerList')->where($id)->find();
+        $res = self::with('fromorder')->where('id', $id)->find();
+        return $res;
+    }
+    /**
+     *根据订单号查询订单信息
+     */
+    public static function GetDataBytrade_no($out_trade_no)
+    {
+        $res = self::with( ['userinfo','fromorder'])->where('out_trade_no', $out_trade_no)->find();
         return $res;
     }
 

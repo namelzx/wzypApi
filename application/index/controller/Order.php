@@ -31,25 +31,26 @@ class Order extends Base
     {
         $data = input('param.');
         $Model = new FromOrder();
-
-        $out_trade_no = date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
         $main = [
-            'out_trade_no' => $out_trade_no,
+            'out_trade_no' =>$data['out_trade_no'],
             'user_id' => $data['user_id'],
             'address_id' => $data['address_id'],
             'allGoodsAndYunPrice' => $data['allGoodsAndYunPrice'],
             'remark' => $data['remark'],
-            'create_time'=>time()
+            'create_time' => time(),
+            'shop_id' => $data['bis_id'],
+            'code'=>$data['code']
         ];
         $order_id = MainOrder::insertGetId($main);
-
+        $sum = 0;//分销利润
         for ($i = 0; $i < count($data['goodsList']); $i++) {
             $ret[$i] = $data['goodsList'][$i];
             $ret[$i]['order_id'] = $order_id;
+            $ret[$i]['bis_id'] = $data['bis_id'];
+            $sum = +$data['goodsList'][$i]['price']*$data['goodsList'][$i]['number'] - $data['goodsList'][$i]['shelves_price']*$data['goodsList'][$i]['number'];
         }
-
-        $from=$Model->allowField(true)->saveAll($ret);
-        return json(msg(200, $from, '添加成功'));
+        $from = $Model->allowField(true)->saveAll($ret);
+        return json(msg(200, $from, $sum));
     }
 
     /*
@@ -80,7 +81,7 @@ class Order extends Base
     {
         $data = input('param.');
         $res = MainOrder::GetDataBydetailed($data['id']);
-        return json(msg(200, $res, '获取成功'));
+        return json(msg(200, $res, '获取订单信息'));
     }
 
 

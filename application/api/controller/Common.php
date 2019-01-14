@@ -33,6 +33,7 @@ class Common extends Base
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file('file');
 
+
 //        dump($file);
         // 移动到框架应用根目录/uploads/ 目录下
         $info = $file->move('./uploads', '');
@@ -43,13 +44,20 @@ class Common extends Base
             if ($fil) {
                 unlink($fileName);
             }
+            $bis_id = input('param.user_id');
+            if (!empty($bis_id)) {    //bis不是空的。那么就是商家更新自己的商家表id
+               db('bis')->where('bis_id', $bis_id)->data(['banner'=> $config['url'].'uploads/' . $info->getSaveName()])->update();
+            }
             return $info->getSaveName();
         } else {
             // 上传失败获取错误信息
             echo $file->getError();
         }
+
+
         return json($file);
     }
+
 //模板编辑图片
     public function tempupload()
     {
@@ -67,7 +75,7 @@ class Common extends Base
             if ($fil) {
                 unlink($fileName);
             }
-            return  $info->getSaveName();
+            return $info->getSaveName();
         } else {
             // 上传失败获取错误信息
             echo $file->getError();

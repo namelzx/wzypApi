@@ -74,4 +74,30 @@ class User extends Base
         return json(msg(200, $res, '获取成功'));
     }
 
+    public function getShopByInfo()
+    {
+        $user_id = input('param.user_id');
+        $res = db('bis')->where('bis_id', $user_id)->find();
+        $goodssum=db('bis_goods')->where('user_id',$user_id)->count();
+        $ordershop=db('main_order')->where('shop_id',$user_id)->count();
+
+        $temp=[
+          'goodssum'=>$goodssum, 'ordershop'=>"已售".$ordershop."件"
+        ];
+        return json(msg(200, $res, $temp));
+    }
+
+    public function postShopByInfo()
+    {
+        $data = input('param.');
+        $res = db('bis')->where('bis_id', $data['bis_id'])->data($data)->update();
+        return json(msg(200, $res, '修改成功'));
+    }
+
+    public function GetShopBySum(){
+        $data=input('param.');
+
+    }
+
+
 }

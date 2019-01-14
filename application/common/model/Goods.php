@@ -47,16 +47,29 @@ class Goods extends Model
         if (!empty($shop)) {
             $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
         }
-        $res = $res->where('status',1)->paginate($data['limit'], false, ['query' => $data['page']]);
+        $res = $res->where('status', 1)->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
     }
+
+    /**
+     * 获取商家商品
+     *
+     */
+    public static function GetShopByList($data, $shop = null)
+    {
+        $res = self::with('banneritems');
+        $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
+        $res = $res->where('status', 1)->paginate($data['limit'], false, ['query' => $data['page']]);
+        return $res;
+    }
+
 
     /**
      *获取详细信息
      */
     public static function GetDataBydetailed($id)
     {
-        $res = self::with('bannerList')->where($id)->find();
+        $res = self::with(['bannerList','bis'])->where($id)->find();
         return $res;
     }
 
@@ -75,8 +88,8 @@ class Goods extends Model
                 $res = $res->where('status', $data['status']);
             }
         }
-        if(empty($data['status'])){
-            $res = $res->where('status',0);
+        if (empty($data['status'])) {
+            $res = $res->where('status', 0);
         }
         if (!empty($shop)) {
             $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
@@ -93,12 +106,13 @@ class Goods extends Model
         $res = self::where($data)->delete();
         return $res;
     }
+
     /**
      * 修改商品状态
      */
     public static function GetShopGoodsByStatus($data)
     {
-        $res = self::where('id',$data['id'])->data($data)->update();
+        $res = self::where('id', $data['id'])->data($data)->update();
         return $res;
     }
 

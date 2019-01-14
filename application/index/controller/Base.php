@@ -31,9 +31,13 @@ class Base extends Controller
         $data = User::where('openid', $PostData['openid'])->find();
         if (empty($data)) {
             $res = User::create($PostData);
-            return json(['token' => 'user', 'data' => $res]);
+            $bisdata = [
+                'bis_id' => $res['id']
+            ];
+            db('bis')->insert($bisdata);
+            return json(['token' => 'user', 'data' => $res, 'status' => 204]);
         } else {
-            return json(['token' => 'user', 'data' => $data]);
+            return json(['token' => 'user', 'data' => $data, 'status' => 200]);
         }
     }
 
