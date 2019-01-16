@@ -60,7 +60,7 @@ Route::group('api/admin/', function () {
 Route::group('api/index/', function () {
     //公用类获取产品类型
     Route::get('/goodstype', 'api/common/getGoodsTypeByList');//获取所有分类
-    Route::get('notice', 'index/index/index');//获取所有分类
+    Route::get('notice', 'index/index/index');//发送消息
     Route::get('/GetUserByOenid', 'index/goods/GetUserByOenid'); /* 获取列表*/
     Route::post('/CheckUser', 'index/goods/CheckUser');//检测是否存在
     Route::post('/images', 'api/common/indexupload');
@@ -106,7 +106,7 @@ Route::group('api/index/', function () {
     Route::post('/order/PostDataByAdd', 'index/order/PostDataByData'); /* 提交订单*/
     Route::post('/order/PostDataByUpdate', 'index/order/PostDataByUpdate'); /*  修改信息*/
     Route::get('/order/GetDataBydetailed', 'index/order/GetDataBydetailed'); /*  获取订单详情*/
-
+    Route::post('/order/PostOrderBystate', 'index/order/PostOrderBystate'); /* 修改订单状态*/
 
 
     /**

@@ -31,26 +31,32 @@ class Order extends Base
     {
         $data = input('param.');
         $Model = new FromOrder();
+        if (empty($data['phone'])) {
+            return json(msg(404, '', '请输入手机号码'));
+        }
         $main = [
-            'out_trade_no' =>$data['out_trade_no'],
+            'out_trade_no' => $data['out_trade_no'],
             'user_id' => $data['user_id'],
-            'address_id' => $data['address_id'],
             'allGoodsAndYunPrice' => $data['allGoodsAndYunPrice'],
-            'remark' => $data['remark'],
+//            'remark' => $data['remark'],
             'create_time' => time(),
             'shop_id' => $data['bis_id'],
-            'code'=>$data['code']
+            'phone' => $data['phone'],
+            'code' => $data['code']
         ];
+
         $order_id = MainOrder::insertGetId($main);
-        $sum = 0;//分销利润
-        for ($i = 0; $i < count($data['goodsList']); $i++) {
-            $ret[$i] = $data['goodsList'][$i];
-            $ret[$i]['order_id'] = $order_id;
-            $ret[$i]['bis_id'] = $data['bis_id'];
-            $sum = +$data['goodsList'][$i]['price']*$data['goodsList'][$i]['number'] - $data['goodsList'][$i]['shelves_price']*$data['goodsList'][$i]['number'];
-        }
-        $from = $Model->allowField(true)->saveAll($ret);
-        return json(msg(200, $from, $sum));
+//        $sum = 0;//分销利润
+//        for ($i = 0; $i < count($data['goodsList']); $i++) {
+//            $ret[$i] = $data['goodsList'][$i];
+//            $ret[$i]['order_id'] = $order_id;
+//            $ret[$i]['bis_id'] = $data['bis_id'];
+//            $sum = +$data['goodsList'][$i]['price']*$data['goodsList'][$i]['number'] - $data['goodsList'][$i]['shelves_price']*$data['goodsList'][$i]['number'];
+//        }
+        $data['goodsList']['order_id'] = $order_id;
+        $data['goodsList']['bis_id'] = $data['bis_id'];//分销商id
+        $Model->allowField(true)->insert($data['goodsList']);
+        return json(msg(200, $order_id, '成功下单'));
     }
 
     /*
@@ -82,6 +88,18 @@ class Order extends Base
         $data = input('param.');
         $res = MainOrder::GetDataBydetailed($data['id']);
         return json(msg(200, $res, '获取订单信息'));
+    }
+
+    /**
+     * 修改订单状态
+     */
+    public function PostOrderBystate()
+    {
+        $data = input('param.');
+        $res = MainOrder::where('id', $data['id'])->data(['status' => $data['status']])->update();
+        $message=$this->templateMessage($data['data']);
+        return json(msg(404, $message, '没有返回参数'));
+
     }
 
 

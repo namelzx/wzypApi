@@ -12,12 +12,23 @@ namespace app\common\model;
 class MainOrder extends BaseModel
 {
     /**
+     * 获取器
+     * @param $value
+     * @return mixed
+     */
+    public function getStatusAttr($value)
+    {
+        $status = [0=>'等待商家接单',1=>'待使用',2=>'已消费',3=>'退款中',4=>'已退款',5=>'订单取消'];
+        return $status[$value];
+    }
+    /**
      * 获取单条
      */
     public function banneritems()
     {
         return $this->hasOne('GoodsBanner', 'goods_id', 'id');
     }
+
     /**
      * 获取用户信息
      */
@@ -25,6 +36,7 @@ class MainOrder extends BaseModel
     {
         return $this->hasOne('User', 'id', 'user_id');
     }
+
     /**
      * 获取订单从表
      */
@@ -51,7 +63,11 @@ class MainOrder extends BaseModel
             $res = $res->where('user_id', $data['user_id']);
         }
         if (!empty($data['status'])) {
+            if($data['status']!=2){
+
             $res = $res->where('status', $data['status']);
+
+            }
         }
         $res = $res->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
@@ -65,12 +81,13 @@ class MainOrder extends BaseModel
         $res = self::with('fromorder')->where('id', $id)->find();
         return $res;
     }
+
     /**
      *根据订单号查询订单信息
      */
     public static function GetDataBytrade_no($out_trade_no)
     {
-        $res = self::with( ['userinfo','fromorder'])->where('out_trade_no', $out_trade_no)->find();
+        $res = self::with(['userinfo', 'fromorder'])->where('out_trade_no', $out_trade_no)->find();
         return $res;
     }
 

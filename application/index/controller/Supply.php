@@ -7,8 +7,8 @@
  */
 
 namespace app\index\controller;
-use app\common\model\MainOrder;
 
+use app\common\model\MainOrder;
 
 /**
  * Class Supply 供货商模块
@@ -93,7 +93,7 @@ class Supply extends Base
     public function queryOrder()
     {
         $data = input('param.');
-        $res=MainOrder::GetDataBytrade_no($data['out_trade_no']);
+        $res = MainOrder::GetDataBytrade_no($data['out_trade_no']);
         return json(msg(200, $res, '返回订单数据'));
     }
 

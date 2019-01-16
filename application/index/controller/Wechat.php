@@ -54,12 +54,22 @@ class Wechat extends Base
             if ($fil) {
                 unlink($path);
             }
-            if (!empty($postdata['type']) || $postdata['1']) {
+            if (!empty($postdata['type']) ) {
+                if($postdata['type']==1){
+
                 db('bis')->where('bis_id', $postdata['bis_id'])->data(['sharecode' => $config['url'] . $fileName . ".jpeg"])->update();
+
+                }
             }
             return $config['url'] . $fileName . ".jpeg";
         }
         return json_encode($data);
+    }
+
+
+    public function Erweima()
+    {
+
     }
 
     /**

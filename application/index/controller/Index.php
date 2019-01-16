@@ -25,11 +25,10 @@ class Index
         ];
 
         $app = Factory::miniProgram($config);
-
        $res= $app->template_message->send([
             'touser' => 'ow5-45a1YF7DuDgSGD_dFzRnBv1Q',
             'template_id' => 'jSug2iNgl5sqXyptRMvtNcLQlZWIQY6vYA5GDgBjU0g',
-            'page' => 'index',
+            'page' => '',
             'form_id' => $data['fid'],
             'data' => [
                 'keyword1' => 'VALUE',
@@ -39,6 +38,11 @@ class Index
                 // ...
             ],
         ]);
+
+       $tem=[
+           'log'=>$res['errcode'].$res['errmsg'].$data['fid']
+       ];
+       db('log')->insert($tem);
        return json($res);
 
     }
