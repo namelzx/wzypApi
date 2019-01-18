@@ -32,13 +32,13 @@ class Common extends Base
         $config = config('aliyun_oss');
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file('file');
-
-
 //        dump($file);
         // 移动到框架应用根目录/uploads/ 目录下
         $info = $file->move('./uploads', '');
         if ($info) {
-            $path = $info->getSaveName();
+            $path = 'uploads/'. $info->getSaveName();
+
+
             $fileName = 'uploads/' . $info->getSaveName();
             $fil = $this->uploadFile($config['Bucket'], $fileName, $info->getPathname());
             if ($fil) {

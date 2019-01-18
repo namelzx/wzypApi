@@ -4,11 +4,16 @@ namespace app\index\controller;
 
 
 use EasyWeChat\Factory;
+use think\cache\driver\Redis;
 
 class Index
 {
     public function index()
     {
+//        $redis=new Redis();
+//
+//        phpinfo();
+//        die();
         $data=input('param.');
         $config = [
             'app_id' => 'wx5b41a56038e8ec76',

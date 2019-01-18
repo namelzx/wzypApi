@@ -92,7 +92,6 @@ class Base extends Controller
                 'keyword2' => $data['keyword2'],
                 'keyword3' => $data['keyword3'],
                 'keyword4' => $data['keyword4'],
-                'keyword5' => $data['keyword5'],
             ],
         ]);
         //记录日志

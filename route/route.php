@@ -89,13 +89,14 @@ Route::group('api/index/', function () {
     /**
      * 用户地址管理
      */
-
     Route::post('/user/postAddress', 'index/user/postAddress'); /* 添加地址*/
     Route::get('/user/getAddressBydetailed', 'index/user/getAddressBydetailed'); /* 获取地址详情*/
     Route::get('/user/GetDataByDelete', 'index/user/GetDataByDelete'); /*  删除数据*/
     Route::get('/user/gettAddress', 'index/user/gettAddress'); /* 获取选中地址*/
     Route::get('/user/getAddressByItems', 'index/user/getAddressByItems'); /* 获取地址列表*/
     Route::get('/user/getDefaultAddress', 'index/user/getDefaultAddress'); /* 获取地址列表*/
+    Route::post('/user/setUserByData', 'index/user/setUserByData'); /* 修改用户信息*/
+    Route::get('/user/getServerByUser', 'index/user/getServerByUser'); /* 修改用户信息*/
 
     /**
      * 订单管理
@@ -113,6 +114,9 @@ Route::group('api/index/', function () {
      * 商家模块
      */
     Route::get('/shop/GetShopList', 'index/shop/GetShopList'); /* 获取列表*/
+    Route::get('/shop/GetShopOrder', 'index/shop/GetShopOrder'); /* 获取列表*/
+
+
 //    Route::post('/shop/PostDataByData', 'index/shop/PostDataByData'); /* 添加商品*/
 //    Route::post('/shop/GetShopByGoods', 'index/shop/GetShopByGoods'); /* 获取商家自己提交的商品*/
 
@@ -126,6 +130,11 @@ Route::group('api/index/', function () {
     Route::get('/supply/GetShopGoodsByDelete', 'index/supply/GetShopGoodsByDelete'); /* 删除商品*/
     Route::get('/supply/GetDataByFind', 'index/supply/GetDataByFind'); /* 获取商品详情*/
     Route::post('/supply/queryOrder', 'index/supply/queryOrder'); /* 查询订单*/
+    Route::get('/supply/getMerchant', 'index/supply/getMerchant'); /* 获取供货商主页信息*/
+    Route::get('/supply/getSupplyByOrder', 'index/supply/getSupplyByOrder'); /* 供货商获取订单*/
+
+
+
 });
 return [
 

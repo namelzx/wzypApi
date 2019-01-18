@@ -20,6 +20,12 @@ class Goods extends Model
     {
         return $this->hasOne('GoodsBanner', 'goods_id', 'id');
     }
+    /**
+     * 获取商家信息
+     */
+    public function supply(){
+        return $this->hasOne('User', 'id', 'bis_id');
+    }
 
     /**
      * 获取整个数据列表
@@ -72,13 +78,12 @@ class Goods extends Model
         $res = self::with(['bannerList','bis'])->where($id)->find();
         return $res;
     }
-
     /**
      *获取商家自己的商品
      */
     public static function GetShopByGoods($data)
     {
-        $res = self::with('banneritems')->where('bis_id', $data['bis_id']);
+        $res = self::with('banneritems')->where('supply_id', $data['bis_id']);
 
         if (!empty($data['type_id'])) {
             $res = $res->where('type_id', $data['type_id']);
@@ -113,6 +118,14 @@ class Goods extends Model
     public static function GetShopGoodsByStatus($data)
     {
         $res = self::where('id', $data['id'])->data($data)->update();
+        return $res;
+    }
+
+    /**
+     * 根据商品id获取商家信息
+     */
+    public static function GetSupplyByinfo($id){
+        $res=self::with('supply')->where('id',91)->find();
         return $res;
     }
 

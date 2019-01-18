@@ -78,11 +78,11 @@ class User extends Base
     {
         $user_id = input('param.user_id');
         $res = db('bis')->where('bis_id', $user_id)->find();
-        $goodssum=db('bis_goods')->where('user_id',$user_id)->count();
-        $ordershop=db('main_order')->where('shop_id',$user_id)->count();
+        $goodssum = db('bis_goods')->where('user_id', $user_id)->count();
+        $ordershop = db('main_order')->where('shop_id', $user_id)->count();
 
-        $temp=[
-          'goodssum'=>$goodssum, 'ordershop'=>"已售".$ordershop."件"
+        $temp = [
+            'goodssum' => $goodssum, 'ordershop' => "已售" . $ordershop . "件"
         ];
         return json(msg(200, $res, $temp));
     }
@@ -94,9 +94,24 @@ class User extends Base
         return json(msg(200, $res, '修改成功'));
     }
 
-    public function GetShopBySum(){
-        $data=input('param.');
+    /**
+     * 修改用户信息
+     */
+    public function setUserByData()
+    {
+        $data = input('param.');
+        $res = db('user')->where('id', $data['user_id'])->data($data)->update();
+        return json(msg(200, $res, '修改成功'));
+    }
 
+    /**
+     * 获取用户信息
+     */
+    public function getServerByUser()
+    {
+        $data = input('param.');
+        $res = db('user')->where('id', $data['id'])->find();
+        return json(msg(200, $res, '获取成功'));
     }
 
 
