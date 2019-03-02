@@ -11,6 +11,9 @@ namespace app\index\controller;
 
 use app\common\model\BisGoods;
 use app\common\model\MainOrder;
+use think\facade\Request;
+
+use think\response\Json;
 
 class Shop extends Base
 {
@@ -20,7 +23,12 @@ class Shop extends Base
     public function GetShopList()
     {
         $data = input('param.');
+        $tem = [
+            'log' =>Request::url()
+        ];
+        db('log')->insert($tem);
         $all = BisGoods::where('user_id', $data['bis_id'])->all();
+
         $whereorder = [];
         foreach ($all as $v => $item) {
             $whereorder[$v] = $all[$v]['goods_id'];

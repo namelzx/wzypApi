@@ -9,6 +9,7 @@
 namespace app\index\controller;
 
 use app\common\model\MainOrder;
+use app\common\model\SupplyType;
 
 /**
  * Class Supply 供货商模块
@@ -118,6 +119,7 @@ class Supply extends Base
         $orderData = $this->todayOrder($ordertoday);//订单数据
         return json($orderData);
     }
+
     /**
      * 计算今日待确认订单
      */
@@ -131,8 +133,8 @@ class Supply extends Base
             'monthsum' => 0,//本月完成金额
             'jxz' => 0,//进行中的订单
             'djzj' => 0,//等待完成订单利润
-            'tayprofit'=>0,//今天的订单利润
-            'monthprofit'=>0,//本月的营收利润
+            'tayprofit' => 0,//今天的订单利润
+            'monthprofit' => 0,//本月的营收利润
         ];
         $TBC = 0;//待确认
         $SC = 0;
@@ -151,9 +153,9 @@ class Supply extends Base
                 $fromorder = $ordertoday[$v]['fromorder'];
                 $price = $fromorder['price'];   //订单完成价格
                 $shelves_price = $fromorder['shelves_price'];//订单上架价格
-                $proportion=$fromorder['proportion']/100;
+                $proportion = $fromorder['proportion'] / 100;
                 //我们先计算出分销商的利润，因此使用完成的价格减去 上架价格就是分销商的利润了
-                $data['djzj']+=$price-($price-$shelves_price)-($price*$proportion);//得到分销商利润
+                $data['djzj'] += $price - ($price - $shelves_price) - ($price * $proportion);//得到分销商利润
                 //需要计算订单的成交价格。和商品的用户比例和分成
             }
             //今天的订单
@@ -167,9 +169,9 @@ class Supply extends Base
                     $fromorder = $ordertoday[$v]['fromorder'];
                     $price = $fromorder['price'];   //订单完成价格
                     $shelves_price = $fromorder['shelves_price'];//订单上架价格
-                    $proportion=$fromorder['proportion']/100;
+                    $proportion = $fromorder['proportion'] / 100;
                     //我们先计算出分销商的利润，因此使用完成的价格减去 上架价格就是分销商的利润了
-                    $data['tayprofit']+=$price-($price-$shelves_price)-($price*$proportion);//得到分销商利润
+                    $data['tayprofit'] += $price - ($price - $shelves_price) - ($price * $proportion);//得到分销商利润
                 }
             }
 //           //本月的
@@ -181,9 +183,9 @@ class Supply extends Base
                     $fromorder = $ordertoday[$v]['fromorder'];
                     $price = $fromorder['price'];   //订单完成价格
                     $shelves_price = $fromorder['shelves_price'];//订单上架价格
-                    $proportion=$fromorder['proportion']/100;
+                    $proportion = $fromorder['proportion'] / 100;
                     //我们先计算出分销商的利润，因此使用完成的价格减去 上架价格就是分销商的利润了
-                    $data['monthprofit']+=$price-($price-$shelves_price)-($price*$proportion);//得到分销商利润
+                    $data['monthprofit'] += $price - ($price - $shelves_price) - ($price * $proportion);//得到分销商利润
                 }
             }
 
@@ -191,4 +193,46 @@ class Supply extends Base
         return $data;
     }
 
+    /**
+     * 扫码消费
+     */
+    public function ewn(){
+        $data=input('param.');
+        $res=MainOrder::GetOrderByWen($data['out_trade_no']);
+//        $res =db('main_order')->where('out_trade_no',$data['out_trade_no'])->find();
+        if(empty($res)){
+            return json(msg(200, $res, '订单无法使用'));
+        }
+
+        $tem = [
+            'log' =>$data['out_trade_no']
+        ];
+        db('log')->insert($tem);
+        $order_log = [
+            'order_id' => $res['id'],
+            'ordersum' => 0,
+            'admin_price' => 0,
+            'shelves_price' => 0,
+            'create_time' => time(),
+            'supply_price' => 0
+        ];
+        $ordergoods = $res->fromorder;//订单的相关信息
+        $order_log['ordersum'] = $res['allGoodsAndYunPrice'];//订单总价
+        $order_log ['admin_price'] = $ordergoods['proportion'] * $ordergoods['number'];//
+        $order_log['shelves_price'] = $ordergoods['shelves_price'] * $ordergoods['number'];//根据商品的分销利润和数量向乘得到。
+        $order_log['supply_price'] = $order_log['ordersum'] - $order_log['shelves_price'] - $order_log ['admin_price'];//最后供货商得到的利润就是成交总价-平台分红-分销商分红
+        db('order_succeed_log')->insert($order_log);
+        db('goods')->where('id',$ordergoods['goodsId'])->setInc('sales', $ordergoods['number']);
+        MainOrder::where('id', $res['id'])->data(['status' => 2])->update();
+        return json(msg(200, $res, '订单处理成功'));
+    }
+
+   /**
+    * 获取商家分类信息
+    */
+   public function getSupplyByType(){
+       $data=input('param.');
+       $type=SupplyType::getSupplyByType($data);
+       return json($type);
+   }
 }

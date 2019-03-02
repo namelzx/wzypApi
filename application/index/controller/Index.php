@@ -2,54 +2,42 @@
 
 namespace app\index\controller;
 
+use AlibabaCloud\Client\AlibabaCloud;
+use AlibabaCloud\Client\Exception\ClientException;
+use AlibabaCloud\Client\Exception\ServerException;
 
-use EasyWeChat\Factory;
-use think\cache\driver\Redis;
 
-class Index
+class Index extends Base
 {
+
     public function index()
     {
-//        $redis=new Redis();
+//        AlibabaCloud::accessKeyClient('LTAI4G7m7lF5SkXU', 'PbcsuZTY2CMVPjr1K2DGzMejeotVTI')
+//            ->regionId('cn-hangzhou') // replace regionId as you need
+//            ->asGlobalClient();
 //
-//        phpinfo();
-//        die();
-        $data=input('param.');
-        $config = [
-            'app_id' => 'wx5b41a56038e8ec76',
-            'secret' => 'e8dedad2705f30a4e9ff9e16dabe915f',
-
-            // 下面为可选项
-            // 指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
-            'response_type' => 'array',
-
-            'log' => [
-                'level' => 'debug',
-                'file' => __DIR__.'/wechat.log',
-            ],
-        ];
-
-        $app = Factory::miniProgram($config);
-       $res= $app->template_message->send([
-            'touser' => 'ow5-45a1YF7DuDgSGD_dFzRnBv1Q',
-            'template_id' => 'jSug2iNgl5sqXyptRMvtNcLQlZWIQY6vYA5GDgBjU0g',
-            'page' => '',
-            'form_id' => $data['fid'],
-            'data' => [
-                'keyword1' => 'VALUE',
-                'keyword2' => 'VALUE2',
-                'keyword3' => 'VALUE',
-                'keyword4' => 'VALUE2',
-                // ...
-            ],
-        ]);
-
-       $tem=[
-           'log'=>$res['errcode'].$res['errmsg'].$data['fid']
-       ];
-       db('log')->insert($tem);
-       return json($res);
-
+//        try {
+//            $result = AlibabaCloud::rpcRequest()
+//                ->product('Dysmsapi')
+//                // ->scheme('https')
+//                ->version('2017-05-25')
+//                ->action('SendSms')
+//                ->method('POST')
+//                ->options([
+//                    'query' => [
+//                        'PhoneNumbers' => '18577610926',
+//                        'SignName' => '便民生活服务平台',
+//                        'TemplateCode' => 'SMS_157280783',
+//                        'TemplateParam' => '{"consignee": "1234","number":"18577610926","goodsname": "测试" }',
+//                    ],
+//                ])
+//                ->request();
+//            print_r($result->toArray());
+//        } catch (ClientException $e) {
+//            echo $e->getErrorMessage() . PHP_EOL;
+//        } catch (ServerException $e) {
+//            echo $e->getErrorMessage() . PHP_EOL;
+//        }
     }
 
     public function hello($name = 'ThinkPHP5')

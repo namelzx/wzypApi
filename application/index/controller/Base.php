@@ -42,6 +42,13 @@ class Base extends Controller
             db('bis')->insert($bisdata);
             return json(['token' => 'user', 'data' => $res, 'status' => 204]);
         } else {
+            if(!empty($PostData['isshop'])){
+                if($PostData['isshop']>0){
+
+            User::where('openid', $PostData['openid'])->data('isshop',$PostData['isshop'])->update();
+
+                }
+            }
             return json(['token' => 'user', 'data' => $data, 'status' => 200]);
         }
     }

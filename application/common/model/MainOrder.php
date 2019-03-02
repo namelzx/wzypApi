@@ -36,7 +36,6 @@ class MainOrder extends BaseModel
     {
         return $this->hasOne('GoodsBanner', 'goods_id', 'id');
     }
-
     /**
      * 获取用户信息
      */
@@ -78,8 +77,6 @@ class MainOrder extends BaseModel
         if ($status == 0) {
             $res = $res->where('status', 0);
         }
-
-
         $res = $res->order('id desc')->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
     }
@@ -157,6 +154,13 @@ class MainOrder extends BaseModel
         ];
         $res = $res->where($orderwhere)->order('id desc')->select();
         return $res;
+    }
+
+    /**
+     * 扫码消费使用
+     */
+    public  static function GetOrderByWen($out_trade_no){
+        return self::with('fromorder')->where('out_trade_no',$out_trade_no)->find();
     }
 
 }

@@ -45,19 +45,11 @@ class Order extends Base
             'code' => $data['code'],
             'supply_id' => $data['supply_id'],
         ];
-
         $order_id = MainOrder::insertGetId($main);
-
         $data['goodsList']['order_id'] = $order_id;
         $data['goodsList']['bis_id'] = $data['bis_id'];//分销商id
         $Model->allowField(true)->insert($data['goodsList']);
-        if ($data['type'] == 1) {
-            //判断发送类型。 1 是用户操作。所以需要发送给商家。那么就应该查询该商品的id是属于那个商家根据商品的bis_id 根据bis_id去查询user表查询用户的openid再发送给商家信息
-//            $bis_id = db('gooods')->where('id', $data['goods_id'])->field('bis_id')->find();
-            $bis = db('user')->get($data['supply_id']);
-            $data['goodsJsonStr']['openid'] = $bis['openid'];
-            $this->templateMessage($data['goodsJsonStr']);
-        }
+
         return json(msg(200, $order_id, '成功下单'));
     }
 
@@ -120,16 +112,22 @@ class Order extends Base
             ];
             $ordergoods = $res->fromorder;//订单的相关信息
             $order_log['ordersum'] = $res['allGoodsAndYunPrice'];//订单总价
-            $order_log ['admin_price'] = $order_log['ordersum'] * ($ordergoods['proportion'] / 100);//给平台的钱。就是订单的总价*该商品的佣金百分比
-            $order_log['shelves_price'] = $ordergoods['shelves_price'] * $ordergoods['number'];//根据商品的分销利润和数量向乘得到。
-            $order_log['supply_price'] = $order_log['ordersum'] - $order_log['shelves_price'] - $order_log ['admin_price'];//最后供货商得到的利润就是成交总价-平台分红-分销商分红
-            db('order_succeed_log')->insert($order_log);
-        }
-        $res = MainOrder::where('id', $data['id'])->data(['status' => $data['status']])->update();
-        $this->templateMessage($data['data']);
-        return json(msg(404, $res, '执行成功'));
 
+            $order_log ['admin_price'] = $ordergoods['proportion'] * $ordergoods['number'];//
+            
+            $order_log['shelves_price'] = $ordergoods['shelves_price']
+                * $ordergoods['number'];//根据商品的分销利润和数量向乘得到。
+            $order_log['supply_price'] = $order_log['ordersum']
+                - $order_log['shelves_price']
+                - $order_log ['admin_price'];//最后供货商得到的利润就是成交总价-平台分红-分销商分红
+            db('order_succeed_log')->insert($order_log);
+            db('goods')->where('id',$data['goods_id'])->setInc('sales', $ordergoods['number']);
+        }
+       $res=   MainOrder::where('id', $data['id'])->data(['status' => $data['status']])->update();
+        return json(msg(400, $res, '执行成功'));
     }
+
+
 
 
 }

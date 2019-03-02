@@ -19,16 +19,15 @@ Route::group('api/admin/', function () {
     //公用类获取产品类型
     Route::get('/goodstype', 'api/common/getGoodsTypeByList');
     Route::post('/images', 'api/common/upload');
+    Route::get('/getAdminData', 'api/common/getAdminData');
 
     // 登录类
     Route::post('/login', 'api/Login/login');
     Route::get('/info', 'api/Login/info');
     Route::post('/logout', 'api/Login/logout');
-
     /*
     * 账户管理模块
     */
-
     Route::get('/admin', 'api/admin/GetAdminByList'); /* 获取账户列表*/
     Route::post('/admin/DataStatus', 'api/admin/DataStatus'); /* 修改用户状态*/
     Route::get('/admind/DataDelete', 'api/admin/DataDelete'); /*  删除用户*/
@@ -54,6 +53,14 @@ Route::group('api/admin/', function () {
     Route::post('/goods/PostDataByUpdate', 'api/goods/PostDataByUpdate'); /*  修改信息*/
     Route::get('/goods/GetDataBydetailed', 'api/goods/GetDataBydetailed'); /*  删除数据*/
 
+    /**
+     * 供货商
+     */
+    Route::get('supplier/GetDataByList', 'api/supplier/getSupplierByList'); /* 获取列表*/
+    Route::post('supplier/DataStatus', 'api/supplier/DataStatus'); /* 修改用户状态*/
+    Route::get('supplier/GetDataTypeByList', 'api/supplier/GetDataTypeByList'); /* 获取供货商所属商品分类*/
+    Route::post('supplier/PostDataedit', 'api/supplier/PostDataedit'); /* 修改用户状态*/
+    Route::get('supplier/getUserByList', 'api/supplier/getUserByList'); /* 获取列表*/
 });
 
 //用户模块路由
@@ -68,6 +75,8 @@ Route::group('api/index/', function () {
 
     Route::get('/GetToken', 'index//Wechat/GetToken');//获取token
     Route::post('/GetCode', 'index//Wechat/GetCode');//获取二维码
+    Route::post('/GetShopCode', 'index//Wechat/GetShopCode');//获取二维码
+
     Route::get('/getShopByInfo', 'index//user/getShopByInfo');//获取商铺信息
     Route::post('/postShopByInfo', 'index//user/postShopByInfo');//获取二维码
 
@@ -132,8 +141,8 @@ Route::group('api/index/', function () {
     Route::post('/supply/queryOrder', 'index/supply/queryOrder'); /* 查询订单*/
     Route::get('/supply/getMerchant', 'index/supply/getMerchant'); /* 获取供货商主页信息*/
     Route::get('/supply/getSupplyByOrder', 'index/supply/getSupplyByOrder'); /* 供货商获取订单*/
-
-
+    Route::get('supply/getSupplyByType', 'index/Supply/getSupplyByType'); /* 获取供货商所属分类*/
+    Route::get('supply/ewn', 'index/Supply/ewn'); /* 供货商扫码*/
 
 });
 return [

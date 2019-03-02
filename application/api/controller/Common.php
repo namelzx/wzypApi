@@ -24,6 +24,19 @@ class Common extends Base
         return json(msg(200, $res, '获取成功'));
     }
 
+    /**
+     * 获取后台数据
+     */
+    public function getAdminData()
+    {
+        $data = [];
+        $data['usercount'] = db('user')->count();//获取用户总数
+        $data['supplier'] = db('user')->where('status', 'neq', 0)->count();//获取供货商总数
+        $data['order'] = db('order_succeed_log')->field('sum(ordersum) as ordersum,sum(admin_price)as admin_price')->select();
+        return json($data);
+
+    }
+
     /*
      * 前端上传
      */
@@ -36,7 +49,7 @@ class Common extends Base
         // 移动到框架应用根目录/uploads/ 目录下
         $info = $file->move('./uploads', '');
         if ($info) {
-            $path = 'uploads/'. $info->getSaveName();
+            $path = 'uploads/' . $info->getSaveName();
 
 
             $fileName = 'uploads/' . $info->getSaveName();
@@ -46,7 +59,7 @@ class Common extends Base
             }
             $bis_id = input('param.user_id');
             if (!empty($bis_id)) {    //bis不是空的。那么就是商家更新自己的商家表id
-               db('bis')->where('bis_id', $bis_id)->data(['banner'=> $config['url'].'uploads/' . $info->getSaveName()])->update();
+                db('bis')->where('bis_id', $bis_id)->data(['banner' => $config['url'] . 'uploads/' . $info->getSaveName()])->update();
             }
             return $info->getSaveName();
         } else {
@@ -123,8 +136,6 @@ class Common extends Base
         $oss = new \OSS\OssClient($config['KeyId'], $config['KeySecret'], $config['Endpoint']);
         return $oss;
     }
-
-
     /**
      * 上传指定的本地文件内容
      *

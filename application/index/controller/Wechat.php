@@ -29,13 +29,25 @@ class Wechat extends Base
      */
     public function GetCode()
     {
+
         $postdata = input('param.');
+        if(empty($postdata['bis_id'])){
+            $postdata['bis_id']=1;
+        }
         $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" . $postdata['token'];
         $data = [
-            'scene' => "bis",
+            'scene' => $postdata['bis_id'],
+            'page' => 'pages/shop/shop',
             'width' => 430,
             'auto_color' => false,
         ];
+        if (!empty($postdata['type'])) {
+            if ($postdata['type'] == 3) {
+                $data['scene'] = $postdata['out_trade_no'];
+                $data['page'] = 'pages/shop/order/ewn/index';
+            }
+        }
+
         if (!empty($postdata['scene'])) {
             $data['scene'] = $postdata['scene'];
         }
@@ -54,18 +66,15 @@ class Wechat extends Base
             if ($fil) {
                 unlink($path);
             }
-            if (!empty($postdata['type']) ) {
-                if($postdata['type']==1){
-
-                db('bis')->where('bis_id', $postdata['bis_id'])->data(['sharecode' => $config['url'] . $fileName . ".jpeg"])->update();
-
-                }
-            }
+//            if (!empty($postdata['type']) ) {
+//                if($postdata['type']==1){
+            db('bis')->where('bis_id', $postdata['bis_id'])->data(['sharecode' => $config['url'] . $fileName . ".jpeg"])->update();
+//                }
+//            }
             return $config['url'] . $fileName . ".jpeg";
         }
         return json_encode($data);
     }
-
 
     public function Erweima()
     {

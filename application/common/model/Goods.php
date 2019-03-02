@@ -46,7 +46,9 @@ class Goods extends Model
     public static function GetByList($data, $shop = null)
     {
         $res = self::with('banneritems');
-
+        if(!empty($data['name'])){
+            $res = $res->where('name','like','%'.$data['name'].'%');
+        }
         if (!empty($data['type_id'])) {
             $res = $res->where('type_id', $data['type_id']);
         }
@@ -56,7 +58,6 @@ class Goods extends Model
         $res = $res->where('status', 1)->paginate($data['limit'], false, ['query' => $data['page']]);
         return $res;
     }
-
     /**
      * 获取商家商品
      *
@@ -65,11 +66,9 @@ class Goods extends Model
     {
         $res = self::with('banneritems');
         $res = $res->with(['banneritems', 'bis'])->whereIn('id', $shop);
-        $res = $res->where('status', 1)->paginate($data['limit'], false, ['query' => $data['page']]);
+        $res = $res->paginate();
         return $res;
     }
-
-
     /**
      *获取详细信息
      */
